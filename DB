@@ -59,11 +59,3 @@ Public Sub CloseAll()
     End If
     
 End Sub
-
-Public Sub check_obj()
-    If (oCon Is Nothing) Then
-        MsgBox ("obj closed")
-    Else
-        MsgBox ("obj open")
-    End If
-End Sub
