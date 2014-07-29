@@ -1,0 +1,69 @@
+Option Explicit
+
+Public oCon As ADODB.Connection
+Public oRs As ADODB.RecordSet
+
+' server\instance:
+Public SQLSERVERINSTANCE = ""
+' database name :
+Public DATABASENAME = ""
+
+Public Sub Connect()
+
+    Set oCon = New ADODB.Connection
+    oCon.ConnectionString = "Driver=SQL Server;Server=" & SQLSERVERINSTANCE & ";Database=" & DATABASENAME & "; Trusted_Connection=yes;"
+    oCon.Open
+    
+End Sub
+
+Public Sub RecordSet()
+
+    Set oRs = New ADODB.RecordSet
+    oRs.ActiveConnection = oCon
+    
+End Sub
+
+Function Query_Select(query As String) As ADODB.RecordSet
+    If (oCon Is Nothing) Then
+        Me.Connect
+    End If
+    If Not (oRs Is Nothing) Then
+        Set oRs = Nothing
+    End If
+    Me.RecordSet
+    oRs.Source = query
+    oRs.Open
+    Set Query_Select = oRs
+
+End Function
+
+Function Query_Insert(query As String) As Long
+    
+    Dim recordsa As Long
+    If (oCon Is Nothing) Then
+        Me.Connect
+    End If
+    oCon.Execute query, recordsa
+    Query_Insert = recordsa
+    
+End Function
+
+Public Sub CloseAll()
+    If Not (oRs Is Nothing) Then
+        oRs.Close
+        Set oRs = Nothing
+    End If
+    If Not (oCon Is Nothing) Then
+        oCon.Close
+        Set oCon = Nothing
+    End If
+    
+End Sub
+
+Public Sub check_obj()
+    If (oCon Is Nothing) Then
+        MsgBox ("obj closed")
+    Else
+        MsgBox ("obj open")
+    End If
+End Sub
